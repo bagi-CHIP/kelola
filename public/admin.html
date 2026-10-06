@@ -1,204 +1,1089 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin - Panel Kelola Persediaan</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
-    .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .tab-btn { padding: 10px 20px; border: none; background: #e0e0e0; cursor: pointer; border-radius: 4px 4px 0 0; font-weight: bold; }
-    .tab-btn.active { background: #343a40; color: white; }
-    .tab-content { display: none; border: 1px solid #ccc; padding: 15px; border-radius: 0 0 4px 4px; }
-    .tab-content.active { display: block; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 13px; }
-    th { background: #343a40; color: white; }
-    .badge { padding: 3px 6px; border-radius: 3px; color: white; font-weight: bold; }
-    .Disetujui { background: #28a745; }
-    .Ditolak { background: #dc3545; }
-    .Pending { background: #ffc107; color: black; }
-    button { cursor: pointer; padding: 5px 10px; border: none; border-radius: 3px; }
-    .btn-setuju { background: #28a745; color: white; }
-    .btn-tolak { background: #dc3545; color: white; }
-    .form-inline { display: flex; gap: 10px; margin-bottom: 15px; }
-    .form-inline input { padding: 6px; border: 1px solid #ccc; border-radius: 3px; }
-  </style>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Admin - Pengelolaan ATK Kantor</title>
+
+  <link
+    rel="stylesheet"
+    href="/css/admin.css"
+  />
 </head>
+
 <body>
-  <div class="container">
-    <h2>Panel Admin Persediaan Barang</h2>
-    <div>
-      <button class="tab-btn active" onclick="switchTab('peminjaman')">Daftar Peminjaman</button>
-      <button class="tab-btn" onclick="switchTab('stok')">Kelola Stok Barang</button>
-    </div>
 
-    <!-- TAB 1: PEMINJAMAN -->
-    <div id="tab-peminjaman" class="tab-content active">
-      <!-- Di dalam <div id="tab-peminjaman"> -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-         <h3>Daftar Permintaan Masuk</h3>
-          <button style="background: #17a2b8; color: white;" onclick="exportKeExcel()">📊 Export ke Excel</button>
-      </div>
-      <h3>Daftar Permintaan Masuk</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>No. Pinjam</th>
-            <th>Nama & Bidang</th>
-            <th>Barang Dipinjam</th>
-            <th>Keperluan</th>
-            <th>Status</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tabelPeminjaman"></tbody>
-      </table>
-    </div>
+  <!-- HEADER -->
+  <header class="header">
 
-    <!-- TAB 2: KELOLA STOK BARANG -->
-    <div id="tab-stok" class="tab-content">
-      <h3>Tambah Barang Baru</h3>
-      <div class="form-inline">
-        <input type="text" id="addKode" placeholder="Kode (misal: BRG-004)" required>
-        <input type="text" id="addNama" placeholder="Nama Barang" required>
-        <input type="text" id="addSatuan" placeholder="Satuan (unit/pcs)" required>
-        <input type="number" id="addStok" placeholder="Jumlah Stok" min="0" required>
-        <button style="background: #007bff; color: white;" onclick="tambahBarang()">+ Tambah</button>
+    <div class="header-content">
+
+      <div class="header-title">
+
+        <h1>
+          Admin Pengelolaan ATK
+        </h1>
+
+        <p>
+          Kelola stok barang dan permintaan ATK pegawai
+        </p>
+
       </div>
 
-      <h3>Daftar Stok Barang</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Kode</th>
-            <th>Nama Barang</th>
-            <th>Satuan</th>
-            <th width="15%">Stok Saat Ini</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tabelStokAdmin"></tbody>
-      </table>
+
+            <div class="header-actions">
+
+        <a href="/form" class="btn-header">
+          Form Permintaan
+        </a>
+
+        <button class="btn-header" onclick="refreshSemua()">
+          Refresh Data
+        </button>
+
+        <a href="/logout" class="btn-header" style="background-color: #ef4444; color: white;">
+          Logout
+        </a>
+
+      </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- STATISTIK -->
+    <section class="stats-grid">
+
+      <div class="stat-card stat-blue">
+        <div class="stat-label">
+          Total Jenis Barang
+        </div>
+
+        <div
+          class="stat-value"
+          id="statTotalBarang"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card stat-purple">
+        <div class="stat-label">
+          Total Stok
+        </div>
+
+        <div
+          class="stat-value"
+          id="statTotalStok"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card stat-yellow">
+        <div class="stat-label">
+          Telah di Proses Katim
+        </div>
+
+        <div
+          class="stat-value"
+          id="statPending"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card stat-green">
+        <div class="stat-label">
+          Disetujui
+        </div>
+
+        <div
+          class="stat-value"
+          id="statDisetujui"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card stat-red">
+        <div class="stat-label">
+          Ditolak
+        </div>
+
+        <div
+          class="stat-value"
+          id="statDitolak"
+        >
+          0
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- TABS -->
+        <!-- TABS -->
+    <div class="tabs-container">
+      <!-- Kolom / Grup Permintaan -->
+      <div class="tab-group">
+        <button
+          id="tabPermintaanBtn"
+          class="tab-btn active"
+          onclick="switchTab('permintaan')"
+        >
+          Permintaan Barang ATK
+        </button>
+        <button
+          id="tabPermintaanLabBtn"
+          class="tab-btn"
+          onclick="switchTab('permintaanLab')"
+        >
+          Permintaan Barang Lab
+        </button>
+      </div>
+
+      <!-- Kolom / Grup Kelola Barang -->
+      <div class="tab-group">
+        <button
+          id="tabBarangBtn"
+          class="tab-btn"
+          onclick="switchTab('barang')"
+        >
+          Kelola Barang ATK
+        </button>
+        <button
+          id="tabLabBarangBtn"
+          class="tab-btn"
+          onclick="switchTab('labBarang')"
+        >
+          Kelola Barang Lab
+        </button>
+      </div>
+
+      <!-- Kolom / Grup Laporan -->
+      <div class="tab-group">
+        <button
+          id="tabLaporanBtn"
+          class="tab-btn"
+          onclick="switchTab('laporan')"
+        >
+          Laporan / Surat
+        </button>
+      </div>
+    </div>
+
+<!-- TAB PERMINTAAN BARANG LAB -->
+
+
+
+    <!-- TAB PERMINTAAN -->
+    <section
+      id="tabPermintaan"
+      class="tab-panel active"
+    >
+
+      <div class="card">
+
+        <div class="card-header">
+
+          <div>
+            <h2>
+              Daftar Permintaan ATK
+            </h2>
+
+            <p>
+              Tinjau, setujui, atau tolak permintaan pegawai.
+            </p>
+          </div>
+
+
+          <div class="filter-row">
+
+            <input
+              type="search"
+              id="searchPermintaan"
+              class="form-control search-input"
+              placeholder="Cari nama, nomor, bidang..."
+            />
+
+
+              <select
+              id="filterStatus"
+              class="form-control"
+            >
+
+              <option value="">
+                Semua Status
+              </option>
+
+              <option value="Disetujui Katim">
+                Disetujui Katim
+              </option>
+
+              <option value="Menunggu Katim">
+                Menunggu Katim
+              </option>
+
+              <option value="Disetujui">
+                Disetujui (Selesai)
+              </option>
+
+              <option value="Ditolak">
+                Ditolak
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Nomor</th>
+                  <th>Pemohon</th>
+                  <th>Barang</th>
+                  <th>Keperluan</th>
+                  <th>Tanggal</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+
+
+              <tbody id="permintaanBody">
+
+                <tr>
+                  <td
+                    colspan="7"
+                    class="empty"
+                  >
+                    Memuat data permintaan...
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB PERMINTAAN LAB -->
+<section id="tabPermintaanLab" class="tab-panel">
+  <div class="card">
+    <div class="card-header">
+      <h2>Daftar Permintaan Barang Lab</h2>
+      <p>Permintaan barang laboratorium yang menunggu persetujuan Katim.</p>
+    </div>
+    <div class="card-body">
+      <div class="table-wrapper">
+        <table id="tablePermintaanLab">
+          <thead>
+            <tr>
+              <th style="width:140px;">No. Registrasi</th>
+              <th style="width:200px;">Pemohon & Bidang</th>
+              <th>Daftar Barang Diminta</th>
+              <th style="width:110px;text-align:center;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="listPermintaanLab">
+            <tr><td colspan="4" class="empty" style="text-align:center;padding:24px;">
+              Memuat data permintaan...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+</section>
 
-  <script>
-    function exportKeExcel() {
-  const table = document.getElementById('tabelPeminjaman').parentElement;
-  let html = table.outerHTML;
 
-  // Format file sebagai Blob Excel (XLS)
-  const url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-  const downloadLink = document.createElement("a");
-  document.body.appendChild(downloadLink);
-  downloadLink.href = url;
-  downloadLink.download = `Laporan_Peminjaman_${new Date().toISOString().slice(0,10)}.xls`;
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-}
+    <!-- TAB BARANG -->
+    <section
+      id="tabBarang"
+      class="tab-panel"
+    >
 
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      if(tabName === 'peminjaman') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        document.getElementById('tab-peminjaman').classList.add('active');
-        loadPeminjaman();
-      } else {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        document.getElementById('tab-stok').classList.add('active');
-        loadStokAdmin();
-      }
-    }
+      <!-- IMPORT CSV -->
+      <div class="card">
 
-    async function loadPeminjaman() {
-      const res = await fetch('/api/admin/peminjaman');
-      const data = await res.json();
-      const tbody = document.getElementById('tabelPeminjaman');
-      tbody.innerHTML = '';
-      data.forEach(row => {
-        tbody.innerHTML += `
-          <tr>
-            <td><b>${row.nomor_pinjam}</b></td>
-            <td>${row.nama_peminjam}<br><small style="color:gray;">${row.bidang}</small></td>
-            <td>${row.item_list || '-'}</td>
-            <td>${row.keperluan}</td>
-            <td><span class="badge ${row.status}">${row.status}</span></td>
-            <td>
-              ${row.status === 'Pending' ? `
-                <button class="btn-setuju" onclick="updateStatus(${row.id}, 'Disetujui')">Setujui</button>
-                <button class="btn-tolak" onclick="updateStatus(${row.id}, 'Ditolak')">Tolak</button>
-              ` : '-'}
-            </td>
-          </tr>
-        `;
-      });
-    }
+        <div class="card-header">
 
-    async function updateStatus(id, status) {
-      if(!confirm(`Yakin ingin mengubah status menjadi ${status}?`)) return;
-      await fetch('/api/admin/peminjaman/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status })
-      });
-      loadPeminjaman();
-    }
+          <div>
+            <h2>
+              Import Data Stok CSV
+            </h2>
 
-    async function loadStokAdmin() {
-      const res = await fetch('/api/barang');
-      const data = await res.json();
-      const tbody = document.getElementById('tabelStokAdmin');
-      tbody.innerHTML = '';
-      data.forEach(item => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${item.kode}</td>
-            <td>${item.nama}</td>
-            <td>${item.satuan}</td>
-            <td><input type="number" id="stok-val-${item.id}" value="${item.stok}" style="width:70px;"></td>
-            <td>
-              <button style="background: #17a2b8; color: white;" onclick="simpanStok(${item.id})">Simpan Stok</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
+            <p>
+              Gunakan file CSV dengan kolom:
+              kode, nama, satuan, stok.
+            </p>
+          </div>
 
-    async function simpanStok(id) {
-      const newStok = document.getElementById(`stok-val-${id}`).value;
-      await fetch('/api/admin/barang/update-stok', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, stok: newStok })
-      });
-      alert('Stok berhasil diperbarui!');
-      loadStokAdmin();
-    }
+        </div>
 
-    async function tambahBarang() {
-      const kode = document.getElementById('addKode').value;
-      const nama = document.getElementById('addNama').value;
-      const satuan = document.getElementById('addSatuan').value;
-      const stok = document.getElementById('addStok').value;
 
-      if(!kode || !nama || !satuan || stok === '') return alert('Semua input wajib diisi!');
+        <div class="card-body">
 
-      await fetch('/api/admin/barang/tambah', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kode, nama, satuan, stok })
-      });
+          <form
+            id="formImportBarang"
+            enctype="multipart/form-data"
+          >
 
-      alert('Barang baru berhasil ditambahkan!');
-      document.getElementById('addKode').value = '';
-      document.getElementById('addNama').value = '';
-      document.getElementById('addSatuan').value = '';
-      document.getElementById('addStok').value = '';
-      loadStokAdmin();
-    }
+            <div class="form-grid">
 
-    loadPeminjaman();
-  </script>
+              <div class="field">
+
+                <label for="importFile">
+                  File CSV
+                </label>
+
+                <input
+                  id="importFile"
+                  name="file"
+                  type="file"
+                  class="form-control"
+                  accept=".csv,text/csv"
+                  required
+                />
+
+              </div>
+
+            </div>
+
+
+            <div
+              style="
+                margin-top: 12px;
+                padding: 12px;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 12px;
+                color: #475569;
+              "
+            >
+              <strong>Catatan:</strong>
+              jika kode barang sudah ada, maka nama,
+              satuan, dan stok akan diperbarui mengikuti
+              isi CSV.
+            </div>
+
+
+            <div class="form-actions">
+
+  <button
+    id="btnImportBarang"
+    type="submit"
+    class="btn btn-success"
+  >
+    Import CSV
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-secondary"
+    onclick="exportBarangCSV()"
+  >
+    Export Backup CSV
+  </button>
+
+</div>
+
+          </form>
+
+
+          <div
+            id="importResult"
+            style="
+              margin-top: 16px;
+              display: none;
+            "
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TAMBAH BARANG -->
+      <div class="card">
+
+        <div class="card-header">
+
+          <div>
+            <h2>
+              Tambah Barang ATK
+            </h2>
+
+            <p>
+              Tambahkan jenis barang baru ke persediaan.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+          <form id="formTambahBarang">
+
+            <div class="form-grid">
+
+              <div class="field">
+
+                <label for="kodeBarang">
+                  Kode Barang
+                </label>
+
+                <input
+                  id="kodeBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="Contoh: ATK-001"
+                  required
+                />
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="namaBarang">
+                  Nama Barang
+                </label>
+
+                <input
+                  id="namaBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="Contoh: Pulpen Hitam"
+                  required
+                />
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="satuanBarang">
+                  Satuan
+                </label>
+
+                <input
+                  id="satuanBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="pcs / box / rim"
+                  required
+                />
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="stokBarang">
+                  Stok Awal
+                </label>
+
+                <input
+                  id="stokBarang"
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  value="0"
+                  required
+                />
+
+              </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+              <button
+                id="btnTambahBarang"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Tambah Barang
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+      <!-- DAFTAR BARANG -->
+      <div class="card">
+
+        <div class="card-header">
+
+          <div>
+            <h2>
+              Persediaan Barang
+            </h2>
+
+            <p>
+              Ubah stok atau hapus barang yang belum pernah digunakan.
+            </p>
+          </div>
+
+
+          <input
+            type="search"
+            id="searchBarangAdmin"
+            class="form-control search-input"
+            placeholder="Cari kode atau nama barang..."
+          />
+
+        </div>
+
+
+        <div class="card-body">
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Nama Barang</th>
+                  <th>Satuan</th>
+                  <th>Stok</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+
+
+              <tbody id="barangAdminBody">
+
+                <tr>
+                  <td
+                    colspan="5"
+                    class="empty"
+                  >
+                    Memuat data barang...
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB KELOLA BARANG LAB -->
+    <!-- TAB KELOLA BARANG LAB -->
+    <section
+      id="tabLabBarang"
+      class="tab-panel"
+    >
+
+      <!-- TAMBAH BARANG LAB -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Tambah Barang Lab</h2>
+            <p>Tambahkan jenis barang laboratorium baru ke persediaan.</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form id="formTambahLabBarang" onsubmit="tambahBarangLab(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="kodeLabBarang">Kode Barang</label>
+                <input
+                  id="kodeLabBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="Contoh: LAB-001"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="namaLabBarang">Nama Barang</label>
+                <input
+                  id="namaLabBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="Contoh: Tabung Reaksi"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="satuanLabBarang">Satuan</label>
+                <input
+                  id="satuanLabBarang"
+                  type="text"
+                  class="form-control"
+                  placeholder="pcs / unit / botol"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="stokLabBarang">Stok Awal</label>
+                <input
+                  id="stokLabBarang"
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  value="0"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                id="btnTambahLabBarang"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Tambah Barang Lab
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- DAFTAR PERSEDIAAN BARANG LAB -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Persediaan Barang Lab</h2>
+            <p>Ubah stok atau hapus barang yang belum pernah digunakan.</p>
+          </div>
+
+          <input
+            type="search"
+            id="searchLabBarangAdmin"
+            class="form-control search-input"
+            placeholder="Cari kode atau nama barang lab..."
+            oninput="handleSearchLabBarang(this.value)"
+          />
+        </div>
+
+        <div class="card-body">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Nama Barang</th>
+                  <th>Satuan</th>
+                  <th>Stok</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="labBarangAdminBody">
+                <tr>
+                  <td colspan="5" class="empty">
+                    Memuat data barang lab...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section
+  id="tabLaporan"
+  class="tab-panel"
+>
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>
+          Laporan / Surat ATK
+        </h2>
+
+        <p>
+          Filter data berdasarkan bidang dan periode,
+          lalu buat Surat Permintaan Barang ATK atau SBBK.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+      <div class="form-grid">
+
+        <!-- JENIS SURAT -->
+        <div class="field">
+
+          <label for="jenisSurat">
+            Jenis Surat
+          </label>
+
+          <select
+            id="jenisSurat"
+            class="form-control"
+          >
+            <option value="permintaan">
+              Surat Permintaan Barang ATK
+            </option>
+
+            <option value="sbbk">
+              Surat Bukti Barang Keluar
+            </option>
+          </select>
+
+        </div>
+
+
+        <!-- BIDANG -->
+        <div class="field">
+
+          <label for="filterBidangLaporan">
+            Bidang
+          </label>
+
+          <select
+            id="filterBidangLaporan"
+            class="form-control"
+          >
+            <option value="">
+              Semua Bidang
+            </option>
+
+            <option value="Tata Usaha">
+              Tata Usaha
+            </option>
+
+            <option value="Pemeriksaan">
+              Pemeriksaan
+            </option>
+
+            <option value="Penindakan">
+              Penindakan
+            </option>
+
+            <option value="Infokom">
+              Infokom
+            </option>
+          </select>
+
+        </div>
+
+
+        <!-- PERIODE -->
+        <div class="field">
+
+          <label for="jenisPeriode">
+            Periode
+          </label>
+
+          <select
+            id="jenisPeriode"
+            class="form-control"
+            onchange="ubahJenisPeriode()"
+          >
+            <option value="harian">
+              Harian
+            </option>
+
+            <option value="bulanan">
+              Bulanan
+            </option>
+
+            <option value="tahunan">
+              Tahunan
+            </option>
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- HARlAN -->
+      <div
+        id="periodeHarian"
+        class="form-grid"
+        style="margin-top: 16px;"
+      >
+
+        <div class="field">
+
+          <label for="tanggalLaporan">
+            Tanggal
+          </label>
+
+          <input
+            type="date"
+            id="tanggalLaporan"
+            class="form-control"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- BULANAN -->
+      <div
+        id="periodeBulanan"
+        class="form-grid"
+        style="
+          margin-top: 16px;
+          display: none;
+        "
+      >
+
+        <div class="field">
+
+          <label for="bulanLaporan">
+            Bulan
+          </label>
+
+          <select
+            id="bulanLaporan"
+            class="form-control"
+          >
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="tahunBulanan">
+            Tahun
+          </label>
+
+          <input
+            type="number"
+            id="tahunBulanan"
+            class="form-control"
+            min="2020"
+            max="2100"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- TAHUNAN -->
+      <div
+        id="periodeTahunan"
+        class="form-grid"
+        style="
+          margin-top: 16px;
+          display: none;
+        "
+      >
+
+        <div class="field">
+
+          <label for="tahunLaporan">
+            Tahun
+          </label>
+
+          <input
+            type="number"
+            id="tahunLaporan"
+            class="form-control"
+            min="2020"
+            max="2100"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- TOMBOL -->
+      <div
+        class="form-actions"
+        style="margin-top: 18px;"
+      >
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="tampilkanLaporan()"
+        >
+          Tampilkan Data
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="cetakSurat()"
+        >
+          Cetak Surat
+        </button>
+
+      </div>
+
+
+      <!-- HASIL -->
+      <div
+        id="laporanResult"
+        style="margin-top: 24px;"
+      ></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>
+
+
+  <!-- MODAL DETAIL -->
+  <div
+    id="detailModal"
+    class="modal-overlay"
+    style="display: none;"
+  >
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <h3>
+          Detail Permintaan
+        </h3>
+
+        <button
+          class="close-btn"
+          onclick="tutupModal()"
+          aria-label="Tutup"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div
+        id="detailModalBody"
+        class="modal-body"
+      >
+        Memuat...
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary"
+          onclick="tutupModal()"
+        >
+          Tutup
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script src="/js/admin.js"></script>
+  <script src="/js/export.js"></script>
+
+  <!-- Modal Tambah Barang Lab -->
+<div id="modalTambahLab" class="modal" style="display:none;align-items:center;justify-content:center;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Tambah Barang Lab</h3>
+      <button type="button" onclick="tutupModalTambahLab()" style="border:none;background:none;font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <div class="modal-body">
+      <label>Kode</label>
+      <input id="labKode" type="text" class="form-control" placeholder="Contoh: L001">
+      <label>Nama</label>
+      <input id="labNama" type="text" class="form-control" placeholder="Nama barang">
+      <label>Satuan</label>
+      <input id="labSatuan" type="text" class="form-control" placeholder="pcs, set, dll">
+      <label>Stok Awal</label>
+      <input id="labStok" type="number" class="form-control" min="0" value="0">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="tutupModalTambahLab()">Batal</button>
+      <button class="btn btn-primary" onclick="tambahBarangLab()">Simpan</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

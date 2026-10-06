@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Permintaan Barang Lab</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="header-container">
+    <div class="header-title">
+      <h2>Permintaan Barang Laboratorium</h2>
+      <p>Loka POM di Kota Subulussalam</p>
+    </div>
+    <img src="assets/logo-bpom-removebg-preview.png" alt="Logo Badan POM" class="header-logo">
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="info-box">
+      <strong>Informasi:</strong>
+      Silakan isi data pemohon dan pilih barang laboratorium yang dibutuhkan. Permintaan akan melalui tahap verifikasi Kepala Tim dan Admin.
+    </div>
+
+    <div class="grid-layout">
+      <!-- FORM UTAMA -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Form Permintaan Barang Lab</h2>
+          <p>Pastikan data yang dimasukkan sudah benar sebelum dikirim.</p>
+        </div>
+
+        <div class="card-body">
+          <form id="formPermintaan">
+            <!-- DATA PEGAWAI -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nama">Nama Pegawai <span class="required">*</span></label>
+                <input type="text" id="nama" class="form-control" placeholder="Masukkan nama lengkap" autocomplete="name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="bidang">Bidang / Unit Kerja <span class="required">*</span></label>
+                <select id="bidang" class="form-control" required>
+                  <option value="">-- Pilih bidang / unit --</option>
+                  <option value="Tata Usaha">Tata Usaha</option>
+                  <option value="Pemeriksaan">Pemeriksaan</option>
+                  <option value="Penindakan">Penindakan</option>
+                  <option value="Infokom">Infokom</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="keperluan">Keperluan <span style="font-weight: normal; color: #64748b;">(opsional)</span></label>
+              <textarea id="keperluan" class="form-control" placeholder="Contoh: Pengujian sampel rutin" maxlength="500"></textarea>
+            </div>
+
+            <!-- PILIH BARANG -->
+            <div class="section-title">
+              <h3>Pilih Barang Lab</h3>
+              <div class="search-wrapper">
+                <input type="search" id="searchBarang" class="form-control" placeholder="Cari kode atau nama barang lab..." />
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 55px;">Pilih</th>
+                    <th>Kode</th>
+                    <th>Nama Barang</th>
+                    <th>Satuan</th>
+                    <th>Stok</th>
+                    <th style="width: 100px;">Jumlah</th>
+                  </tr>
+                </thead>
+                <tbody id="barangBody">
+                  <tr>
+                    <td colspan="6" class="empty-row">Memuat data barang lab...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="paginationBarang" class="pagination-barang"></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- RINGKASAN -->
+      <aside class="card summary-card">
+        <div class="card-body">
+          <h3 class="summary-title">Ringkasan Permintaan</h3>
+          <div id="summaryContainer">
+            <div class="summary-empty">Belum ada barang yang dipilih.</div>
+          </div>
+
+          <div class="summary-count">
+            <span>Jenis barang</span>
+            <strong id="jumlahJenis">0</strong>
+          </div>
+
+          <button type="submit" form="formPermintaan" id="btnSubmit" class="btn-submit">
+            Kirim Permintaan
+          </button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    Sistem Pengelolaan Permintaan Barang Laboratorium
+  </footer>
+
+  <!-- MODAL SUKSES -->
+  <div id="successModal" class="modal-overlay">
+    <div class="modal">
+      <div class="success-icon">✓</div>
+      <h2>Permintaan Berhasil</h2>
+      <p>Permintaan barang lab Anda sudah diterima dan menunggu persetujuan Kepala Tim.</p>
+      <div class="registration-box">
+        <div class="registration-label">Nomor Registrasi</div>
+        <div id="registrationNumber" class="registration-number">-</div>
+      </div>
+      <p>Simpan nomor registrasi ini sebagai referensi permintaan Anda.</p>
+      <br />
+      <button class="btn-modal" onclick="selesaiPermintaan()">Selesai</button>
+    </div>
+  </div>
+
+  <script src="/js/permintaan-lab.js"></script>
+</body>
+</html>

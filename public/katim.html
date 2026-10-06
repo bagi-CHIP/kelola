@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Ketua Tim | Sistem ATK</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    /* Styling khusus penyempurna Panel Katim */
+    .katim-container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+    .badge-info {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .item-chip {
+      display: inline-block;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: #334155;
+    }
+    .katim-modal-card {
+      background: white;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .katim-modal-header {
+      padding: 18px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .katim-modal-header h3 {
+      font-size: 18px;
+      color: #1e293b;
+      margin: 0;
+    }
+    .katim-modal-body {
+      padding: 20px 24px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .katim-modal-footer {
+      padding: 16px 24px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .item-edit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Persetujuan Ketua Tim</h1>
+        <p>Tinjau dan verifikasi permintaan barang untuk unit kerja Anda.</p>
+      </div>
+      <div class="header-actions">
+        <a href="/logout" class="btn btn-secondary" style="color: white; border-color: rgba(255,255,255,0.3);">Keluar / Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="katim-container">
+        <!-- STATISTIK RINGKASAN -->
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+      <div class="stat-card stat-yellow">
+        <div class="stat-label">Review Menunggu (ATK)</div>
+        <div class="stat-value" id="countMenunggu">0</div>
+      </div>
+      <div class="stat-card stat-yellow">
+        <div class="stat-label">Review Menunggu (LAB)</div>
+        <div class="stat-value" id="countMenungguLab">0</div>
+      </div>
+    </div>
+    <!-- TABEL DAFTAR PERMINTAAN -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2>Daftar Permintaan Masuk</h2>
+          <p>Permintaan barang yang membutuhkan persetujuan atau penyesuaian kuantitas.</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-wrapper">
+          <table id="tableKatim">
+            <thead>
+              <tr>
+                <th style="width: 140px;">No. Registrasi</th>
+                <th style="width: 200px;">Pemohon & Bidang</th>
+                <th>Daftar Barang Diminta</th>
+                <th style="width: 110px; text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="listPermintaan">
+              <tr>
+                <td colspan="4" class="empty" style="text-align: center; padding: 24px;">
+                  Memuat data permintaan...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <!-- TAB PERMINTAAN LAB (setelah tabel ATK yang ada) -->
+<section id="tabLabPermintaan" style="margin-top: 24px;">
+  <div class="card">
+    <div class="card-header">
+      <h2>Permintaan Barang Lab</h2>
+      <p>Daftar permintaan barang laboratorium yang menunggu persetujuan Anda.</p>
+    </div>
+    <div class="card-body">
+      <div class="table-wrapper">
+        <table id="tableKatimLab">
+          <thead>
+            <tr>
+              <th style="width:140px;">No. Registrasi</th>
+              <th style="width:200px;">Pemohon & Bidang</th>
+              <th>Daftar Barang Diminta</th>
+              <th style="width:110px;text-align:center;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="listPermintaanLabKatim">
+            <tr><td colspan="4" class="empty" style="text-align:center;padding:24px;">
+              Memuat data permintaan...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+  </div>
+
+  <!-- MODAL REVIEW KATIM -->
+  <div id="modalKatim" class="modal" style="display: none; align-items: center; justify-content: center;">
+    <div class="katim-modal-card">
+      <div class="katim-modal-header">
+        <h3>Tinjau & Validasi Permintaan</h3>
+        <button type="button" onclick="tutupModalKatim()" style="border:none; background:none; font-size:20px; cursor:pointer; color:#64748b;">✕</button>
+      </div>
+
+      <div class="katim-modal-body">
+        <div id="infoPemohon" style="margin-bottom: 16px; font-size: 14px; color: #475569;"></div>
+        
+        <label style="font-size: 13px; font-weight: bold; color: #334155; margin-bottom: 8px; display: block;">
+          Rincian & Penyesuaian Kuantitas:
+        </label>
+        <div id="detailPermintaan"></div>
+
+        <div style="margin-top: 16px;">
+          <label for="catatanKatim" style="font-size: 13px; font-weight: bold; color: #334155; margin-bottom: 6px; display: block;">
+            Catatan / Keterangan (Opsional):
+          </label>
+          <textarea id="catatanKatim" class="form-control" rows="3" placeholder="Contoh: Jumlah pulpen disesuaikan dengan ketersediaan..."></textarea>
+        </div>
+      </div>
+
+      <div class="katim-modal-footer">
+        <button type="button" onclick="tutupModalKatim()" class="btn btn-secondary">Batal</button>
+        <button type="button" onclick="prosesKatim('Ditolak Katim')" class="btn btn-danger">Tolak</button>
+        <button type="button" onclick="prosesKatim('Disetujui Katim')" class="btn btn-success">Setujui Permintaan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/katim.js"></script>
+</body>
+</html>

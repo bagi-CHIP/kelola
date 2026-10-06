@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin & Katim | Sistem ATK</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      color: #1e293b;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      padding: 36px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(30, 64, 175, 0.12);
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      background: #dbeafe;
+      font-size: 30px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 25px;
+      color: #1e3a8a;
+    }
+
+    .subtitle {
+      margin-bottom: 28px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .role-label,
+    .field-label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .role-option {
+      position: relative;
+    }
+
+    .role-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .role-card {
+      display: block;
+      padding: 16px 10px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .role-card .role-icon {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 25px;
+    }
+
+    .role-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .role-card small {
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    .role-option input:checked + .role-card {
+      border-color: #2563eb;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .role-option input:focus-visible + .role-card {
+      outline: 3px solid #93c5fd;
+      outline-offset: 3px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .field input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 75px;
+    }
+
+    .show-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .login-button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .login-button:hover {
+      background: #1d4ed8;
+    }
+
+    .login-button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #b91c1c;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      color: #166534;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 24px;
+      text-align: center;
+      text-decoration: none;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .back-link:hover {
+      color: #2563eb;
+    }
+
+    .security-note {
+      margin-top: 22px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 420px) {
+      .login-container {
+        padding: 26px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="login-container">
+    <div class="logo" aria-hidden="true">🔐</div>
+
+    <h1>Login Sistem Permintaan Barang</h1>
+    <p class="subtitle">
+      Silakan masuk untuk mengakses panel pengelolaan permintaan ATK.
+    </p>
+
+    <form id="loginForm">
+      <span class="role-label">Masuk sebagai</span>
+
+      <div class="roles">
+        <label class="role-option">
+          <input
+            type="radio"
+            name="role"
+            value="admin"
+            checked
+          >
+          <span class="role-card">
+            <span class="role-icon">🛡️</span>
+            <strong>Admin</strong>
+            <small>Pengelola ATK</small>
+          </span>
+        </label>
+
+        <label class="role-option">
+          <input
+            type="radio"
+            name="role"
+            value="katim"
+          >
+          
+          <span class="role-card">
+            <span class="role-icon">👥</span>
+            <strong>Katim</strong>
+            <small>Persetujuan awal</small>
+          </span>
+          
+        </label>
+        
+      </div>
+       <div id="bidangContainer" class="field" style="display:none;">
+  <label class="field-label" for="bidang">Bidang Katim</label>
+  <select id="bidang" name="bidang">
+    <option value="">-- Pilih Bidang --</option>
+    <option value="Tata Usaha">Tata Usaha</option>
+    <option value="Pemeriksaan">Pemeriksaan</option>
+    <option value="Penindakan">Penindakan</option>
+    <option value="Infokom">Infokom</option>
+  </select>
+</div>
+
+     
+
+      <div class="field">
+        <label class="field-label" for="username">
+          Username
+        </label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Masukkan username"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="password">
+          Password
+        </label>
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Masukkan password"
+            autocomplete="current-password"
+            required
+          >
+          <button
+            class="show-password"
+            type="button"
+            id="togglePassword"
+          >
+            Lihat
+          </button>
+        </div>
+      </div>
+
+      <button class="login-button" type="submit" id="loginButton">
+        Masuk
+      </button>
+
+      <div
+        class="message"
+        id="loginMessage"
+        role="status"
+        aria-live="polite"
+      ></div>
+    </form>
+
+    <a class="back-link" href="/">
+      ← Kembali ke halaman utama
+    </a>
+
+    <p class="security-note">
+      Akses hanya untuk Admin dan Ketua Tim yang berwenang.
+      Jangan bagikan kata sandi kepada orang lain.
+    </p>
+  </main>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? 'Sembunyikan' : 'Lihat';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const message = document.getElementById('loginMessage');
+      const button = document.getElementById('loginButton');
+      
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries());
+
+      button.disabled = true;
+      message.className = 'message';
+      message.textContent = 'Sedang masuk...';
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          message.className = 'message success';
+          message.textContent = 'Login berhasil! Mengalihkan...';
+          
+          // Simpan status login di localStorage (opsional/sementara)
+                    // Simpan status login di localStorage
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('userRole', result.role);
+
+          setTimeout(() => {
+            if (result.role === 'katim') {
+              window.location.href = '/katim';
+            } else {
+              window.location.href = '/admin';
+            }
+          }, 1000);
+        } else {
+          message.className = 'message error';
+          message.textContent = result.error;
+        }
+      } catch (err) {
+        message.className = 'message error';
+        message.textContent = 'Gagal terhubung ke server.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    // Tampilkan dropdown bidang hanya bila role = katim
+document.querySelectorAll('input[name="role"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const bidangDiv = document.getElementById('bidangContainer');
+    const bidangSelect = document.getElementById('bidang');
+    if (r.value === 'katim') {
+      bidangDiv.style.display = 'block';
+      bidangSelect.required = true;
+    } else {
+      bidangDiv.style.display = 'none';
+      bidangSelect.required = false;
+      bidangSelect.value = '';
+    }
+  });
+});
+  </script>
+</body>
+</html>
+

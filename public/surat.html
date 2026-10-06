@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Surat ATK</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px;
+
+      background: #e5e7eb;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: #000;
+    }
+
+
+    .toolbar {
+      width: 210mm;
+
+      max-width: 100%;
+
+      margin:
+        0 auto
+        20px;
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+    }
+
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+    }
+
+
+    .btn {
+      border: 0;
+
+      border-radius: 7px;
+
+      padding:
+        10px
+        16px;
+
+      font-size: 14px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+
+    .btn-secondary {
+      background: white;
+      color: #334155;
+
+      border:
+        1px solid
+        #cbd5e1;
+    }
+
+
+    .paper {
+      width: 210mm;
+
+      min-height: 297mm;
+
+      max-width: 100%;
+
+      margin: auto;
+
+      padding:
+        18mm
+        18mm
+        20mm;
+
+      background: #ffffff;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.12);
+    }
+
+
+    /* ==========================
+       KOP
+    ========================== */
+
+    .letter-head {
+      position: relative;
+
+      display: grid;
+
+      grid-template-columns:
+        90px
+        1fr
+        90px;
+
+      align-items: center;
+
+      min-height: 100px;
+
+      padding-bottom: 10px;
+
+      border-bottom:
+        3px solid #000;
+    }
+
+
+    .logo-area {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+    }
+
+
+    .logo-area img {
+      width: 95px;
+
+      height: auto;
+
+      object-fit: contain;
+    }
+
+
+    .head-center {
+      text-align: center;
+      
+      line-height: 1.25;
+    }
+
+
+    .head-center .instansi {
+      font-size: 17px;
+
+      font-weight: 700;
+    }
+
+
+    .head-center .unit {
+      margin-top: 3px;
+
+      font-size: 18px;
+
+      font-weight: 700;
+    }
+
+
+    .head-center .alamat {
+      margin-top: 5px;
+
+      font-size: 10px;
+
+      line-height: 1.4;
+    }
+
+
+    /* ==========================
+       JUDUL
+    ========================== */
+
+    .document-title {
+      margin-top: 24px;
+
+      text-align: center;
+    }
+
+
+    .document-title h1 {
+      margin: 0;
+
+      font-size: 16px;
+
+      text-decoration: underline;
+
+      text-transform: uppercase;
+    }
+
+
+    .document-title .nomor {
+      margin-top: 5px;
+
+      font-size: 12px;
+    }
+
+
+    /* ==========================
+       INFO SURAT
+    ========================== */
+
+    .document-info {
+      margin-top: 24px;
+
+      font-size: 12px;
+    }
+
+
+    .info-row {
+      display: grid;
+
+      grid-template-columns:
+        130px
+        15px
+        1fr;
+
+      margin-bottom: 6px;
+    }
+
+
+    .editable {
+      min-width: 80px;
+
+      border-bottom:
+        1px dotted
+        #555;
+
+      outline: none;
+    }
+
+
+    /* ==========================
+       TABLE
+    ========================== */
+
+    .table-wrapper {
+      margin-top: 20px;
+
+      width: 100%;
+
+      overflow: visible;
+    }
+
+
+    table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      table-layout: fixed;
+
+      font-size: 10px;
+    }
+
+
+    th,
+    td {
+      border:
+        1px solid #000;
+
+      padding:
+        6px
+        5px;
+
+      vertical-align: middle;
+    }
+
+
+    th {
+      text-align: center;
+
+      font-weight: 700;
+    }
+
+
+    td.center {
+      text-align: center;
+    }
+
+
+    td.right {
+      text-align: right;
+    }
+
+
+    .col-no {
+      width: 38px;
+    }
+
+
+    .col-kode {
+      width: 75px;
+    }
+
+
+    .col-satuan {
+      width: 70px;
+    }
+
+
+    .col-jumlah {
+      width: 75px;
+    }
+
+
+    .col-keperluan {
+      width: 130px;
+    }
+
+
+    /* ==========================
+       TANDA TANGAN
+    ========================== */
+
+    .signature-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 25px;
+
+      margin-top: 40px;
+
+      font-size: 11px;
+
+      text-align: center;
+    }
+
+
+    .signature-box {
+      min-height: 135px;
+    }
+
+
+    .signature-role {
+      min-height: 32px;
+    }
+
+
+    .signature-space {
+      height: 70px;
+    }
+
+
+    .signature-name {
+      font-weight: 700;
+
+      text-decoration: underline;
+    }
+
+
+    .signature-nip {
+      margin-top: 3px;
+
+      font-size: 10px;
+    }
+
+
+    /* ==========================
+       STATUS
+    ========================== */
+
+    .loading,
+    .error,
+    .empty {
+      padding: 30px;
+
+      text-align: center;
+
+      font-size: 14px;
+    }
+
+
+    .error {
+      color: #b91c1c;
+    }
+
+
+    /* ==========================
+       PRINT
+    ========================== */
+
+    @page {
+      size: A4 portrait;
+
+      margin:
+        10mm;
+    }
+
+
+    @media print {
+
+      body {
+        background: #fff;
+
+        padding: 0;
+      }
+
+
+      .toolbar {
+        display: none;
+      }
+
+
+      .paper {
+        width: 100%;
+
+        min-height: auto;
+
+        margin: 0;
+
+        padding:
+          8mm
+          10mm;
+
+        box-shadow: none;
+      }
+
+
+      .editable {
+        border-bottom:
+          none;
+      }
+
+
+      table {
+        page-break-inside: auto;
+      }
+
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+
+      thead {
+        display:
+          table-header-group;
+      }
+
+
+      .signature-grid {
+        page-break-inside: avoid;
+      }
+    }
+
+
+    @media (
+      max-width: 800px
+    ) {
+
+      body {
+        padding: 10px;
+      }
+
+
+      .paper {
+        width: 100%;
+
+        padding: 20px;
+      }
+
+
+      .toolbar {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+
+    <div class="toolbar-left">
+
+      <button
+        class="btn btn-secondary"
+        onclick="window.close()"
+      >
+        Kembali
+      </button>
+
+    </div>
+
+
+    <div class="toolbar-right">
+
+      <button
+        class="btn btn-primary"
+        onclick="window.print()"
+      >
+        Cetak / Simpan PDF
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- KERTAS -->
+  <main
+    id="paper"
+    class="paper"
+  >
+
+    <div class="loading">
+      Memuat data surat...
+    </div>
+
+  </main>
+
+
+  <script>
+
+    // =====================================================
+    // UTIL
+    // =====================================================
+
+    function escapeHtml(value) {
+      return String(
+        value ?? ''
+      )
+        .replaceAll(
+          '&',
+          '&amp;'
+        )
+        .replaceAll(
+          '<',
+          '&lt;'
+        )
+        .replaceAll(
+          '>',
+          '&gt;'
+        )
+        .replaceAll(
+          '"',
+          '&quot;'
+        )
+        .replaceAll(
+          "'",
+          '&#039;'
+        );
+    }
+
+
+    function formatTanggalIndonesia(
+      value
+    ) {
+      if (!value) {
+        return '-';
+      }
+
+
+      const parts =
+        String(value)
+          .substring(0, 10)
+          .split('-');
+
+
+      if (
+        parts.length !== 3
+      ) {
+        return value;
+      }
+
+
+      const [
+        tahun,
+        bulan,
+        tanggal
+      ] = parts;
+
+
+      const namaBulan = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+      ];
+
+
+      return (
+        `${Number(tanggal)} ` +
+        `${namaBulan[
+          Number(bulan) - 1
+        ]} ` +
+        `${tahun}`
+      );
+    }
+
+
+    function formatPeriode(
+      mulai,
+      selesai
+    ) {
+      if (
+        mulai === selesai
+      ) {
+        return formatTanggalIndonesia(
+          mulai
+        );
+      }
+
+
+      return (
+        formatTanggalIndonesia(
+          mulai
+        ) +
+        ' s.d. ' +
+        formatTanggalIndonesia(
+          selesai
+        )
+      );
+    }
+
+
+    // =====================================================
+    // AGREGASI BARANG
+    // =====================================================
+
+    function gabungkanBarang(
+      data,
+      jenis
+    ) {
+      const map =
+        new Map();
+
+
+      for (
+        const permintaan of data
+      ) {
+
+        const items =
+          Array.isArray(
+            permintaan.items
+          )
+            ? permintaan.items
+            : [];
+
+
+        for (
+          const item of items
+        ) {
+
+          const key =
+            String(
+              item.kode
+            );
+
+
+          if (
+            !map.has(key)
+          ) {
+            map.set(
+              key,
+              {
+                kode:
+                  item.kode,
+
+                nama:
+                  item.nama,
+
+                satuan:
+                  item.satuan,
+
+                jumlah:
+                  0,
+
+                jumlah_disetujui:
+                  0,
+
+                keperluan:
+                  new Set()
+              }
+            );
+          }
+
+
+          const current =
+            map.get(key);
+
+
+          current.jumlah +=
+            Number(
+              item.jumlah
+            ) || 0;
+
+
+          current.jumlah_disetujui +=
+            Number(
+              item.jumlah_disetujui
+            ) || 0;
+
+
+          if (
+            permintaan.keperluan
+          ) {
+            current.keperluan.add(
+              permintaan.keperluan
+            );
+          }
+        }
+      }
+
+
+      let hasil =
+        Array.from(
+          map.values()
+        );
+
+
+      if (
+        jenis === 'sbbk'
+      ) {
+        hasil =
+          hasil.filter(
+            item =>
+              item
+                .jumlah_disetujui >
+              0
+          );
+      }
+
+
+      hasil.sort(
+        (a, b) => {
+
+          const angkaA =
+            Number(
+              String(a.kode)
+                .match(
+                  /\d+/
+                )?.[0] || 0
+            );
+
+
+          const angkaB =
+            Number(
+              String(b.kode)
+                .match(
+                  /\d+/
+                )?.[0] || 0
+            );
+
+
+          return (
+            angkaA -
+            angkaB
+          );
+        }
+      );
+
+
+      return hasil;
+    }
+
+
+    // =====================================================
+    // KOP SURAT
+    // =====================================================
+
+    function renderKop() {
+      return `
+        <div class="letter-head">
+
+          <div class="logo-area">
+
+            <img
+              src="assets/logo-bpom-removebg-preview.png"
+              alt="Logo"
+              onerror="
+                this.style.display='none'
+              "
+            >
+
+          </div>
+
+
+          <div class="head-center" >
+
+            <div class="instansi">
+              
+              <span style="color: Blue;">LOKA </span><span style="color: green;">PENGAWAS OBAT DAN MAKANAN<br>
+              DI KOTA SUBULUSSALAM</span>
+              
+            </div>
+
+            <div class="alamat">
+              JI. Lae Oram, Komplek Perkantoran, Kecamatan Simpang Kiri,
+              <br>
+              Kota Subulussalam 24782
+              <br>
+              Telp. 0812-6208-1070
+            </div>
+
+          </div>
+
+
+        </div>
+      `;
+    }
+
+
+    // =====================================================
+    // SURAT PERMINTAAN
+    // =====================================================
+
+    function renderSuratPermintaan(
+      result,
+      filter
+    ) {
+
+      const barang =
+        gabungkanBarang(
+          result.data,
+          'permintaan'
+        );
+
+
+      const rows =
+        barang
+          .map(
+            (
+              item,
+              index
+            ) => {
+
+              const keperluan =
+                Array.from(
+                  item.keperluan
+                )
+                  .join('; ');
+
+
+              return `
+                <tr>
+
+                  <td class="center">
+                    ${index + 1}
+                  </td>
+
+                  <td class="center">
+                    ${escapeHtml(
+                      item.kode
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      item.nama
+                    )}
+                  </td>
+
+                  <td class="center">
+                    ${escapeHtml(
+                      item.satuan
+                    )}
+                  </td>
+
+                  <td class="center">
+                    ${item.jumlah}
+                  </td>
+
+                  <td class="center">
+                    ${item.jumlah_disetujui}
+                  </td>
+
+                  <td>
+                    ${
+                      escapeHtml(
+                        keperluan
+                      ) || '-'
+                    }
+                  </td>
+
+                </tr>
+              `;
+            }
+          )
+          .join('');
+
+
+      return `
+        ${renderKop()}
+
+
+        <div class="document-title">
+
+          <h1>
+            Surat Permintaan Barang ATK
+          </h1>
+
+          <div class="nomor">
+            Nomor:
+            <span
+              class="editable"
+              contenteditable="true"
+            >
+              ................................
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="document-info">
+
+          <div class="info-row">
+
+            <div>
+              Bidang
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              ${escapeHtml(
+                filter.bidang ||
+                'Semua Bidang'
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <div>
+              Periode
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              ${escapeHtml(
+                formatPeriode(
+                  filter.tanggalMulai,
+                  filter.tanggalSelesai
+                )
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <div>
+              Kelompok Barang
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              Alat Tulis Kantor (ATK)
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th
+                  rowspan="2"
+                  class="col-no"
+                >
+                  No
+                </th>
+
+                <th
+                  rowspan="2"
+                  class="col-kode"
+                >
+                  Kode
+                </th>
+
+                <th rowspan="2">
+                  Nama Barang
+                </th>
+
+                <th
+                  rowspan="2"
+                  class="col-satuan"
+                >
+                  Satuan
+                </th>
+
+                <th
+                  colspan="2"
+                >
+                  Jumlah
+                </th>
+
+                <th
+                  rowspan="2"
+                  class="col-keperluan"
+                >
+                  Keperluan
+                </th>
+
+              </tr>
+
+
+              <tr>
+
+                <th class="col-jumlah">
+                  Permintaan
+                </th>
+
+                <th class="col-jumlah">
+                  Disetujui
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              ${
+                rows ||
+                `
+                  <tr>
+
+                    <td
+                      colspan="7"
+                      class="center"
+                    >
+                      Tidak ada data.
+                    </td>
+
+                  </tr>
+                `
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        ${renderTandaTangan(
+          'permintaan'
+        )}
+      `;
+    }
+
+
+    // =====================================================
+    // SBBK
+    // =====================================================
+
+    function renderSBBK(
+      result,
+      filter
+    ) {
+
+      const barang =
+        gabungkanBarang(
+          result.data,
+          'sbbk'
+        );
+
+
+      const rows =
+        barang
+          .map(
+            (
+              item,
+              index
+            ) => `
+              <tr>
+
+                <td class="center">
+                  ${index + 1}
+                </td>
+
+                <td class="center">
+                  ${escapeHtml(
+                    item.kode
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    item.nama
+                  )}
+                </td>
+
+                <td class="center">
+                  ${escapeHtml(
+                    item.satuan
+                  )}
+                </td>
+
+                <td class="center">
+                  ${item.jumlah_disetujui}
+                </td>
+
+                <td>
+                  Barang telah disetujui
+                  dan dikeluarkan
+                </td>
+
+              </tr>
+            `
+          )
+          .join('');
+
+
+      return `
+        ${renderKop()}
+
+
+        <div class="document-title">
+
+          <h1>
+            Surat Bukti Barang Keluar
+          </h1>
+
+          <div class="nomor">
+
+            Nomor:
+
+            <span
+              class="editable"
+              contenteditable="true"
+            >
+              ................................
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="document-info">
+
+          <div class="info-row">
+
+            <div>
+              Bidang
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              ${escapeHtml(
+                filter.bidang ||
+                'Semua Bidang'
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <div>
+              Periode
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              ${escapeHtml(
+                formatPeriode(
+                  filter.tanggalMulai,
+                  filter.tanggalSelesai
+                )
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <div>
+              Kelompok Barang
+            </div>
+
+            <div>
+              :
+            </div>
+
+            <div>
+              Alat Tulis Kantor (ATK)
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th class="col-no">
+                  No
+                </th>
+
+                <th class="col-kode">
+                  Kode
+                </th>
+
+                <th>
+                  Nama Barang
+                </th>
+
+                <th class="col-satuan">
+                  Satuan
+                </th>
+
+                <th class="col-jumlah">
+                  Jumlah Keluar
+                </th>
+
+                <th>
+                  Keterangan
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              ${
+                rows ||
+                `
+                  <tr>
+
+                    <td
+                      colspan="6"
+                      class="center"
+                    >
+                      Tidak ada barang keluar.
+                    </td>
+
+                  </tr>
+                `
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        ${renderTandaTangan(
+          'sbbk'
+        )}
+      `;
+    }
+
+
+    // =====================================================
+    // TANDA TANGAN
+    // =====================================================
+
+    function renderTandaTangan(
+      jenis
+    ) {
+
+      if (
+        jenis === 'sbbk'
+      ) {
+        return `
+          <div class="signature-grid">
+
+            <div class="signature-box">
+
+              <div class="signature-role">
+                Yang Menyerahkan
+              </div>
+
+              <div class="signature-space"></div>
+
+              <div
+                class="signature-name editable"
+                contenteditable="true"
+              >
+                Nama Petugas
+              </div>
+
+              <div
+                class="signature-nip editable"
+                contenteditable="true"
+              >
+                NIP. ........................
+              </div>
+
+            </div>
+
+
+            <div class="signature-box">
+
+              <div class="signature-role">
+                Mengetahui / Menyetujui
+              </div>
+
+              <div class="signature-space"></div>
+
+              <div
+                class="signature-name editable"
+                contenteditable="true"
+              >
+                Nama Pejabat
+              </div>
+
+              <div
+                class="signature-nip editable"
+                contenteditable="true"
+              >
+                NIP. ........................
+              </div>
+
+            </div>
+
+
+            <div class="signature-box">
+
+              <div class="signature-role">
+                Yang Menerima
+              </div>
+
+              <div class="signature-space"></div>
+
+              <div
+                class="signature-name editable"
+                contenteditable="true"
+              >
+                Nama Penerima
+              </div>
+
+              <div
+                class="signature-nip editable"
+                contenteditable="true"
+              >
+                NIP. ........................
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }
+
+
+      return `
+        <div class="signature-grid">
+
+          <div class="signature-box">
+
+            <div class="signature-role">
+              Yang Meminta
+            </div>
+
+            <div class="signature-space"></div>
+
+            <div
+              class="signature-name editable"
+              contenteditable="true"
+            >
+              Nama Pemohon
+            </div>
+
+            <div
+              class="signature-nip editable"
+              contenteditable="true"
+            >
+              NIP. ........................
+            </div>
+
+          </div>
+
+
+          <div class="signature-box">
+
+            <div class="signature-role">
+              Mengetahui
+            </div>
+
+            <div class="signature-space"></div>
+
+            <div
+              class="signature-name editable"
+              contenteditable="true"
+            >
+             Koordinator Administrasi
+            </div>
+
+            <div
+              class="signature-nip editable"
+              contenteditable="true"
+            >
+              NIP. ........................
+            </div>
+
+          </div>
+
+
+          <div class="signature-box">
+
+            <div class="signature-role">
+              Menyetujui
+            </div>
+
+            <div class="signature-space"></div>
+
+            <div
+              class="signature-name editable"
+              contenteditable="true"
+            >
+              Kordinator Teknis
+            </div>
+
+            <div
+              class="signature-nip editable"
+              contenteditable="true"
+            >
+              NIP. ........................
+            </div>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    // =====================================================
+    // LOAD SURAT
+    // =====================================================
+
+    async function loadSurat() {
+
+      const paper =
+        document.getElementById(
+          'paper'
+        );
+
+
+      const urlParams =
+        new URLSearchParams(
+          window.location.search
+        );
+
+
+      const jenis =
+        urlParams.get('jenis') ||
+        'permintaan';
+
+
+      const bidang =
+        urlParams.get('bidang') ||
+        '';
+
+
+      const tanggalMulai =
+        urlParams.get(
+          'tanggal_mulai'
+        );
+
+
+      const tanggalSelesai =
+        urlParams.get(
+          'tanggal_selesai'
+        );
+
+
+      if (
+        !tanggalMulai ||
+        !tanggalSelesai
+      ) {
+
+        paper.innerHTML = `
+          <div class="error">
+            Filter tanggal tidak lengkap.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      try {
+
+        const params =
+          new URLSearchParams({
+            jenis,
+            bidang,
+            tanggal_mulai:
+              tanggalMulai,
+            tanggal_selesai:
+              tanggalSelesai
+          });
+
+
+        const response =
+          await fetch(
+            `/api/admin/laporan?${params.toString()}`
+          );
+
+
+        const result =
+          await response.json();
+
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ||
+            'Gagal mengambil data surat.'
+          );
+        }
+
+
+        const filter = {
+          jenis,
+          bidang,
+          tanggalMulai,
+          tanggalSelesai
+        };
+
+
+        if (
+          jenis === 'sbbk'
+        ) {
+
+          document.title =
+            'Surat Bukti Barang Keluar';
+
+
+          paper.innerHTML =
+            renderSBBK(
+              result,
+              filter
+            );
+
+        } else {
+
+          document.title =
+            'Surat Permintaan Barang ATK';
+
+
+          paper.innerHTML =
+            renderSuratPermintaan(
+              result,
+              filter
+            );
+        }
+
+
+      } catch (error) {
+
+        paper.innerHTML = `
+          <div class="error">
+            ${escapeHtml(
+              error.message
+            )}
+          </div>
+        `;
+      }
+    }
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      loadSurat
+    );
+
+  </script>
+
+</body>
+</html>
